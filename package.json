@@ -1,0 +1,24 @@
+{
+  "name": "simplemachinelabs",
+  "version": "1.0.0",
+  "description": "Autonomous test automation via ui code and user journeys",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xtglazex/SimpleMachineLabs.git"
+  },
+  "author": "Tyler Glaze",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xtglazex/SimpleMachineLabs/issues"
+  },
+  "homepage": "https://github.com/xtglazex/SimpleMachineLabs#readme",
+  "dependencies": {
+    "axios": "^1.3.4",
+    "cheerio": "^1.0.0-rc.12",
+    "cypress": "^12.6.0"
+  }
+}
