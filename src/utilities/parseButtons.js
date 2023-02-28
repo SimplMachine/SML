@@ -40,19 +40,7 @@ function parseHtmlForButtonTags(inputFilePath) {
 
   console.log(`Total button tags found: ${totalButtonCount}`);
 
-  // const selectorFileContents = selectors
-  //   .map((selector) => `cy.get('${selector}');`)
-  //   .join("\n");
-  // fs.writeFileSync(outputFilePath, selectorFileContents);
-
   return selectors;
 }
 
 module.exports = parseHtmlForButtonTags;
-
-// Again can be split to a new file, takes inputFilePath generated currently from index then creates a new file called selectors
-// in the future this should be able to also take in a template literal by subfolder and generate a better name based on site navigation/map
-// const inputFilePath = "webDocument.html";
-// const outputFilePath = "selectors1.js";
-// const buttonSelectors = parseHtmlForButtonTags(inputFilePath, outputFilePath);
-// console.log(buttonSelectors);
