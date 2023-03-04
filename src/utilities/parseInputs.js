@@ -5,12 +5,12 @@ const fs = require("fs");
 // pushes either ids or "unique" classes to a selectors array then maps through to format the selectors into a page object
 // currently I wrote this using cypress syntax, but we can write it to be a choice and support different frameworks
 // future iterations will use template literals to take the subfolder from previous funtion to create unique PO names
-function parseHtmlForButtonTags(htmlFile) {
+function parseHtmlForInputTags(htmlFile) {
   const selectors = [];
   let noUniqueClassesCount = 0;
-  let totalButtonCount = 0;
+  let totalInputCount = 0;
 
-  htmlFile("button").each(function () {
+  htmlFile("input").each(function () {
     const id = htmlFile(this).attr("id");
     if (id) {
       selectors.push({
@@ -34,18 +34,18 @@ function parseHtmlForButtonTags(htmlFile) {
         noUniqueClassesCount++;
       }
     }
-    totalButtonCount++;
+    totalInputCount++;
   });
 
   if (noUniqueClassesCount > 0) {
     console.log(
-      `Warning: ${noUniqueClassesCount} buttons had no unique class.`
+      `Warning: ${noUniqueClassesCount} input fields had no unique class.`
     );
   }
 
-  console.log(`Total button tags found: ${totalButtonCount}`);
+  console.log(`Total input fields found: ${totalInputCount}`);
 
   return selectors;
 }
 
-module.exports = parseHtmlForButtonTags;
+module.exports = parseHtmlForInputTags;
