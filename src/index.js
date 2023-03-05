@@ -1,6 +1,9 @@
 const axios = require("axios");
 const fs = require("fs");
+const cheerio = require("cheerio");
 const parseHtmlForButtonTags = require("./utilities/parseButtons");
+const parseHtmlForInputTags = require("./utilities/parseInputs");
+const formatPOFile = require("./utilities/formatPOFile");
 
 // Simple function that takes in url/filepath variables and returns document
 async function fetchDocument(url, filePath) {
@@ -9,13 +12,17 @@ async function fetchDocument(url, filePath) {
   fs.writeFileSync(filePath, document, { encoding: "utf-8" });
   return document;
 }
+
+const formatTitle = (title) => title.replace(/[^A-Z0-9]+/gi, "_");
+
 const createPOFile = () => {
   const inputFilePath = "webDocument.html";
-  const outputFilePath = "selectors.js";
-  const buttonSelectors = parseHtmlForButtonTags(inputFilePath);
-  const selectorFileContents = buttonSelectors
-    .map((selector) => `cy.get('${selector}');`)
-    .join("\n");
+  const html = fs.readFileSync(inputFilePath, "utf-8");
+  const $ = cheerio.load(html);
+  const outputFilePath = `PageObjects/${formatTitle($("title").text())}.js`;
+  const buttonSelectors = parseHtmlForButtonTags($);
+  const inputSelectors = parseHtmlForInputTags($);
+  const selectorFileContents = formatPOFile(buttonSelectors, inputSelectors);
   fs.writeFileSync(outputFilePath, selectorFileContents);
 };
 
@@ -27,6 +34,11 @@ const filePath = "webDocument.html";
 fetchDocument(url, filePath)
   .then((document) => {
     console.log(`Fetched document and saved to file: ${filePath}`);
+    const dir = "./PageObjects";
+
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
     createPOFile();
   })
   .catch((error) => {
