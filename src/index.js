@@ -3,6 +3,7 @@ const fs = require("fs");
 const cheerio = require("cheerio");
 const parseHtmlForButtonTags = require("./utilities/parseButtons");
 const parseHtmlForInputTags = require("./utilities/parseInputs");
+const parseHtmlForHREFTags = require("./utilities/crawlURL");
 const formatPOFile = require("./utilities/formatPOFile");
 
 // Simple function that takes in url/filepath variables and returns document
@@ -15,15 +16,17 @@ async function fetchDocument(url, filePath) {
 
 const formatTitle = (title) => title.replace(/[^A-Z0-9]+/gi, "_");
 
-const createPOFile = () => {
+const createPOFile = (url) => {
   const inputFilePath = "webDocument.html";
   const html = fs.readFileSync(inputFilePath, "utf-8");
   const $ = cheerio.load(html);
   const outputFilePath = `PageObjects/${formatTitle($("title").text())}.js`;
   const buttonSelectors = parseHtmlForButtonTags($);
   const inputSelectors = parseHtmlForInputTags($);
+  const hrefTags = parseHtmlForHREFTags($, url);
   const selectorFileContents = formatPOFile(buttonSelectors, inputSelectors);
   fs.writeFileSync(outputFilePath, selectorFileContents);
+  console.log(hrefTags);
 };
 
 // This needs to be split out into it's own area, I figure we can build it into the website.
@@ -39,7 +42,7 @@ fetchDocument(url, filePath)
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
-    createPOFile();
+    createPOFile(url);
   })
   .catch((error) => {
     console.error(`Error fetching document: ${error.message}`);
