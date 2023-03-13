@@ -48,7 +48,7 @@ const commonWebElements = [
         let totalCommonWebElementsCount = 0;
     
         commonWebElements.forEach((element) => {
-            htmlFile(element).each(function () {
+            htmlFile(element)?.each(function () {
             const testId = htmlFile(this).attr("testId");
             if (testId) {
                 selectors.push({
