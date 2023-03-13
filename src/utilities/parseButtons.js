@@ -18,30 +18,22 @@ function parseHtmlForButtonTags(htmlFile) {
         name: id.replace(/[^A-Z0-9]+/gi, "_"),
       });
     } else {
-      const classList = htmlFile(this).attr("class");
-      if (classList) {
-        const classArray = classList.split(" ");
-        if (classArray.length === 1) {
-          const className = classArray[0];
-          selectors.push({
-            selector: `.${className}`,
-            name: className.replace(/[^A-Z0-9]+/gi, "_"),
-          });
-        } else {
-          noUniqueClassesCount++;
-        }
+      // If no id, check for unique class among all classes
+      const classes = htmlFile(this).attr("class").split(" ");
+      const uniqueClass = classes.find((className) => {
+        return htmlFile(`.${className}`).length === 1;
+      });
+      if (uniqueClass) {
+        selectors.push({
+          selector: `.${uniqueClass}`,
+          name: uniqueClass.replace(/[^A-Z0-9]+/gi, "_"),
+        });
       } else {
         noUniqueClassesCount++;
       }
     }
     totalButtonCount++;
   });
-
-  if (noUniqueClassesCount > 0) {
-    console.log(
-      `Warning: ${noUniqueClassesCount} buttons had no unique class.`
-    );
-  }
 
   console.log(`Total button tags found: ${totalButtonCount}`);
 

@@ -3,6 +3,7 @@ const fs = require("fs");
 const cheerio = require("cheerio");
 const parseHtmlForButtonTags = require("./utilities/parseButtons");
 const parseHtmlForInputTags = require("./utilities/parseInputs");
+const parseHtmlForCommonWebElements = require("./utilities/parseElements");
 const parseHtmlForHREFTags = require("./utilities/crawlURL");
 const formatPOFile = require("./utilities/formatPOFile");
 
@@ -24,6 +25,7 @@ const createPOFile = (filePath) => {
   const outputFilePath = `PageObjects/${formatTitle($("title").text())}.js`;
   const buttonSelectors = parseHtmlForButtonTags($);
   const inputSelectors = parseHtmlForInputTags($);
+  // const elementSelectors = parseHtmlForCommonWebElements($);
   const selectorFileContents = formatPOFile(buttonSelectors, inputSelectors);
   fs.writeFileSync(outputFilePath, selectorFileContents);
 };
