@@ -1,9 +1,6 @@
 const formatPOFile = (elements, title) => {
   const openingContent = `class ${title} {\nconstructor() {\n`;
   const endContent = `}\n}\nmodule.exports = ${title};`;
-  // const selectorContents = elements
-  //   .map((element) => `const ${element.name} = cy.get('${element.selector}');`)
-  //   .join("\n");
 
   let selectorContents = "";
 
