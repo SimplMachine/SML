@@ -1,9 +1,7 @@
 const axios = require("axios");
 const fs = require("fs");
 const cheerio = require("cheerio");
-const parseHtmlForButtonTags = require("./utilities/parseButtons");
-const parseHtmlForInputTags = require("./utilities/parseInputs");
-const parseHtmlForCommonWebElements = require("./utilities/parseElements");
+const parseCommonElements = require("./utilities/parseCommonElements");
 const parseHtmlForHREFTags = require("./utilities/crawlURL");
 const formatPOFile = require("./utilities/formatPOFile");
 
@@ -22,11 +20,10 @@ const formatTitle = (title) => title.replace(/[^A-Z0-9]+/gi, "_");
 const createPOFile = (filePath) => {
   const html = fs.readFileSync(filePath, "utf-8");
   const $ = cheerio.load(html);
-  const outputFilePath = `PageObjects/${formatTitle($("title").text())}.js`;
-  const buttonSelectors = parseHtmlForButtonTags($);
-  const inputSelectors = parseHtmlForInputTags($);
-  // const elementSelectors = parseHtmlForCommonWebElements($);
-  const selectorFileContents = formatPOFile(buttonSelectors, inputSelectors);
+  const pageTitle = formatTitle($("title").text());
+  const outputFilePath = `PageObjects/${pageTitle}.js`;
+  const elements = parseCommonElements($);
+  const selectorFileContents = formatPOFile(elements, pageTitle);
   fs.writeFileSync(outputFilePath, selectorFileContents);
 };
 
