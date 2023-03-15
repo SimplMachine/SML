@@ -1,22 +1,19 @@
-const formatPOFile = (buttonSelectors, inputSelectors) => {
-  const buttons = buttonSelectors
-    .map(
-      (button) => `const ${button.name}_button = cy.get('${button.selector}');`
-    )
-    .join("\n");
-  const inputFields = inputSelectors
-    .map((input) => `const ${input.name}_input = cy.get('${input.selector}');`)
-    .join("\n");
+const formatPOFile = (elements, title) => {
+  const openingContent = `class ${title} {\nconstructor() {\n`;
+  const endContent = `}\n}\nmodule.exports = ${title};`;
 
-  // I do not like this, but as we add more selector types and what not, we can clean this up
-  const outputContent =
-    "// Button Selectors" +
-    "\n" +
-    buttons +
-    "\n" +
-    "// Input Selectors" +
-    "\n" +
-    inputFields;
+  let selectorContents = "";
+
+  Object.keys(elements)
+    .filter((elementCategory) => elements[elementCategory].length >= 1)
+    .map((elementCategory) => {
+      selectorContents += `// ${elementCategory} Selectors\n`;
+      elements[elementCategory].map((element) => {
+        selectorContents += `this.${element.name} = cy.get('${element.selector}');\n`;
+      });
+    });
+
+  const outputContent = openingContent + selectorContents + endContent;
 
   return outputContent;
 };
